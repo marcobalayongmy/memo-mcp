@@ -104,6 +104,8 @@ skill-outputs/   # design documents (not part of the installable package)
 
 ## Current status
 
+**GitHub repo:** https://github.com/marcobalayongmy/memo-mcp
+
 **T-01 through T-15 complete.** All automated tasks done; only manual release steps remain.
 
 ### All files implemented
