@@ -1,0 +1,28 @@
+[build-system]
+requires = ["uv_build>=0.7"]
+build-backend = "uv_build"
+
+[project]
+name = "memo-mcp"
+version = "0.1.0"
+description = "A personal notes MCP server for Claude Desktop"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Marco", email = "marcobalayong@gmail.com" }]
+dependencies = [
+    "mcp>=1.27.0,<2.0",
+    "pydantic>=2.11",
+    "typer>=0.12,<1.0",
+    "structlog>=24.0",
+    "filelock>=3.13",
+]
+
+[project.scripts]
+memo-mcp = "memo_mcp.cli:app"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "anyio>=4.0"]
+
+[tool.uv_build.targets.wheel]
+packages = ["src/memo_mcp"]
