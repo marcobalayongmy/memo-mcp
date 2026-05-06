@@ -102,45 +102,6 @@ skill-outputs/   # design documents (not part of the installable package)
 - Publish via OIDC trusted publishing on `v*` tags (`.github/workflows/publish.yml`).
 - First publish: dry-run to TestPyPI at `0.0.1a0`, then cut `v0.1.0` tag for real PyPI.
 
-## Current status
+## Progress tracking
 
-**GitHub repo:** https://github.com/marcobalayongmy/memo-mcp
-
-**T-01 through T-15 complete.** All automated tasks done; only manual release steps remain.
-
-### All files implemented
-
-| File | Status |
-|------|--------|
-| `src/memo_mcp/storage.py` | `open_db`, `add_note`, `search_notes`, `list_notes`, `encode_cursor`, `decode_cursor`, `reindex` |
-| `src/memo_mcp/logging.py` | `configure_logging`, `get_logger` |
-| `src/memo_mcp/server.py` | `mcp = FastMCP(name="memo")` |
-| `src/memo_mcp/tools.py` | `notes.add`, `notes.search`, `notes.list`; `_get_conn()` guard |
-| `src/memo_mcp/cli.py` | `serve` + `reindex`; all exit codes (0–4) verified |
-| `tests/conftest.py` | `db`, `mcp_client`, `setup_logging` fixtures |
-| `tests/test_storage.py` | 25 cases |
-| `tests/test_tools.py` | 17 cases (async via `@pytest.mark.anyio`; stdout-leak assertions) |
-| `tests/test_cli.py` | 10 cases (all exit codes, idempotent reindex, serve mock, `--help`) |
-| `README.md` | Install, Claude Desktop config JSON, env vars, reindex scheduling |
-| `.github/workflows/publish.yml` | `test` → `publish` (OIDC, `environment: publish`, no secrets) |
-
-**Test suite: 52 tests, all passing.**
-
-### Key decisions made during build (not in original design)
-- `_get_conn()` guard in `tools.py` — `None` produces `RuntimeError`, not cryptic `AttributeError`
-- `pydantic>=2.11` (not `>=2.0`) — `mcp` itself requires 2.11+; old bound was misleading
-- `typer>=0.12,<1.0` — safety upper bound; typer is pre-1.0
-- `anyio>=4.0` added to dev extras — already transitive via `mcp`, made explicit
-- `configure_logging()` session fixture in `conftest.py` — directs structlog to stderr in tests, enabling stdout-leak assertions
-- `serve` test uses `patch.object(mcp, "run")` — `mcp.run()` is a sync wrapper calling `anyio.run()` directly, so patching `asyncio.run` alone is insufficient
-
-### Remaining (manual)
-
-**Next: T-16** — Register trusted publisher on pypi.org and test.pypi.org:
-- GitHub repo, workflow file `publish.yml`, environment name `publish`
-- Push `v0.0.1a0` tag → confirm TestPyPI dry-run succeeds
-- `pip install -i https://test.pypi.org/simple/ memo-mcp==0.0.1a0` and verify `memo-mcp --help`
-
-**Then: T-17** — Cut `v0.1.0` tag → real PyPI publish
-
-**Final automated passes:** `code-review` → `security-analysis`
+See `STATUS.md` for current task status, last session summary, and blockers.
